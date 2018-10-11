@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% load static %}
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>::HOME::</title>
+
+    <style>
+    .bg
+    {
+      position:fixed;
+      padding:0;
+      margin:0;
+      top:0;
+      left:0;
+      width: 100%;
+      height: 100%;
+      background: url({% static 'image/background.jpg' %});
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size:cover;
+    }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href='{% static 'css/style.css' %}' />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+  </head>
+
+
+
+  <body >
+    <div class="bg">
+    </div>
+
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color:rgba(100,100,100,0.5);">
+      <img class="navbar-brand" src="{% static 'image/logo.png'%}" style="height:auto; width:auto;max-height:50px;" alt="logo">
+      <a class="nav-link navbar-brand text-white font-weight-bold border-right">NINDRA</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbartarget"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbartarget">
+        <ul class="navbar-nav mx-auto m-2">
+          <li class="nav-item mr-md-3 "><a class="nav-link text-light" href="/">HOME</a></li>
+          <li class="nav-item ml-md-3 "><a class="nav-link text-light" href="/server/upload">UPLOAD</a></li>
+        </ul>
+        <form class="form-inline">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">File</span>
+            </div>
+            <input class="form-control" type="text" placeholder="Search" />
+            <input type="button" disabled=true class="btn btn-success" value="Search" />
+          </div>
+        </form>
+      </div>
+    </nav>
+
+
+    <div class="container">
+      <div class="row">
+
+        <div class="offset-md-3 col-md-6  col-xs-2" >
+          <div class="border-dark rounded" style="margin:10px; border-radius:10px;">
+            <form class="form-inline" action="/" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <div class="input-group mt-md-5 mt-xs-2 mb-3" style='width:100%;'>
+                <div class="input-group-prepend">
+                  <span class="input-group-text">File Tag</span>
+                </div>
+                <input type="text" name="Tag" class="form-control"  placeholder="Tag">
+              </div>
+
+              <div class="input-group mb-3" style='width:100%;'>
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Author&nbsp&nbsp</span>
+                </div>
+                <input type="text" name="Author" class="form-control"  placeholder="Author">
+              </div>
+
+              <input type="file" name="File"/>
+              <input type="submit" class="btn btn-light" value="Upload"/>
+
+
+            </form>
+          </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% load static %}
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>::HOME::</title>
+
+    <style>
+    .bg
+    {
+      position:fixed;
+      padding:0;
+      margin:0;
+      top:0;
+      left:0;
+      width: 100%;
+      height: 100%;
+      background: url({% static 'image/background.jpg' %});
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size:cover;
+    }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href='{% static 'css/style.css' %}' />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script>
+      function Delete(x)
+      {
+        if(confirm("Are you sure you want to delete this item?"))
+        {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function()
+        {
+          if(this.readyState==4 && this.status==200)
+          {
+            var y = xhttp.responseText;
+            if(y=='success')
+          {
+              window.location.replace("/");
+            }
+          }
+        };
+        xhttp.open('POST','server/delete/',true);
+        var csr = "{{ csrf_token }}";
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.setRequestHeader('X-CSRFToken',csr);
+        xhttp.send("x="+x);
+      }
+    }
+
+
+
+      function Search()
+      {
+        txt = document.getElementById('search').value;
+        if(txt)
+        {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function()
+          {
+            if(this.readyState==4 && this.status==200)
+            {
+              var y = xhttp.responseText;
+              document.write(y);
+            }
+          };
+          xhttp.open('POST','server/search/',true);
+          var csr = "{{ csrf_token }}";
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.setRequestHeader('X-CSRFToken',csr);
+          xhttp.send("x="+txt);
+
+        }
+
+      }
+    </script>
+
+    </head>
+
+
+
+  <body >
+    {% if Message == True %}
+    <script>
+    alert('Upload Failed');
+    </script>
+    {% endif %}
+
+    <div class="bg">
+    </div>
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color:rgba(100,100,100,0.5);">
+      <img class="navbar-brand" src="{% static 'image/logo.png'%}" style="height:auto; width:auto;max-height:50px;" alt="logo">
+      <a class="nav-link navbar-brand text-white font-weight-bold border-right">MY-SERVER</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbartarget"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbartarget">
+        <ul class="navbar-nav mx-auto m-2">
+          <li class="nav-item mr-md-3 "><a class="nav-link text-light" href="/">HOME</a></li>
+          <li class="nav-item ml-md-3 "><a class="nav-link text-light" href="/server/upload">UPLOAD</a></li>
+        </ul>
+        <form class="form-inline">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text text">File:</span>
+            </div>
+            <input class="form-control" type="text" id ="search" placeholder="Search" />
+            <input type="button" class="btn btn-success"{% if Searched == True %} disabled = true {% endif %} onclick="Search()"  value="Search"  />
+          </div>
+        </form>
+      </div>
+    </nav>
+
+
+
+
+
+
+    <div class="container mt-5">
+      <div class="row pt-5">
+
+        <div class="offset-md-3 col-md-6  col-xs-2" >
+          <span class="text-info font-weight-bold ">{{ search }}</span>
+          {% for i in data %}
+          <div class="border-dark  p-3 text-white" style="margin:10px; border-radius:10px;background-color:rgba(50,50,50,0.5);">
+            <table class="table">
+              <tr>
+                <td class=" text-light font-weight-bold text-center border-top border-secondary" style="width:20%;background-color:rgba(100,100,100,0.5);">File</td>
+                <td class="text-white font-weight-bold text-center border border-secondary" style="width:80%;">{{ i.Tag }}</td>
+                <td class="text-white font-weight-bold text-center border border-secondary" style="width:80%;">{{ i.Ext }}</td>
+              </tr>
+              <tr>
+                <td class="text-light font-weight-bold text-center border-top border-secondary" style="width:20%;background-color:rgba(100,100,100,0.5);">Author</td>
+                <td class="text-white font-weight-bold text-center border border-secondary" style="width:80%;">{{ i.Author }}</td>
+              </tr>
+            </table>
+
+              <a class="btn btn-info" href="{{ i.File.url }}" download>Download</a>
+              <button class="btn btn-danger float-right" onClick ="Delete(x={{ i.pk }})" >Delete</button>
+
+
+
+
+
+          </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+
+
+
+  </body>
+</html>
