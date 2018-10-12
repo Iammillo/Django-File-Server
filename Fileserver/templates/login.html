@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% load static %}
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>::HOME::</title>
+
+    <style>
+    .bg
+    {
+      position:fixed;
+      padding:0;
+      margin:0;
+      top:0;
+      left:0;
+      width: 100%;
+      height: 100%;
+      background: url({% static 'image/background.jpg' %});
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size:cover;
+    }
+
+    </style>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href='{% static 'css/style.css' %}' />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script>
+      function register()
+      {
+
+        var Username = document.getElementById('Username').value;
+        var password1 = document.getElementById('password1').value;
+        var password2 = document.getElementById('password2').value;
+        var Firstname = document.getElementById('Firstname').value;
+        var Lastname = document.getElementById('Lastname').value;
+        var Email = document.getElementById('Email').value;
+
+
+        if(!(Username && password1 && password2 && Firstname && Lastname && Email ))
+        {
+          document.getElementById("error").innerHTML = "Error Occurred";
+        }
+        else if (password1 != password2) {
+          document.getElementById("error").innerHTML = "Password Not Matched";
+        }
+        else {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function()
+          {
+            if(this.readyState==4 && this.status==200)
+            {
+              var y = xhttp.responseText;
+              if(y !="Success")
+              {
+                document.getElementById("error").innerHTML = y;
+              }
+              else {
+                window.location.replace("/");
+              }
+            }
+          };
+          xhttp.open('POST','/server/register/',true);
+          var csr = "{{ csrf_token }}";
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.setRequestHeader('X-CSRFToken',csr);
+          xhttp.send("Username="+Username+"&Password="+password1+"&Firstname="+Firstname+"&Lastname="+Lastname+"&Email="+Email);
+        }
+
+
+      }
+
+
+      function login(p)
+      {
+
+        var Username = document.getElementById('Username2'+p).value;
+        var password = document.getElementById('Password2'+p).value;
+
+        if(!(Username && password))
+        {
+          alert("Field Empty")
+        }
+        else {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function()
+          {
+            if(this.readyState==4 && this.status==200)
+            {
+              var y = xhttp.responseText;
+              if(y !="Success")
+              {
+                alert('login failed')
+              }
+              else {
+                window.location.replace("/");
+              }
+            }
+          };
+          xhttp.open('POST','/server/validate/',true);
+          var csr = "{{ csrf_token }}";
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.setRequestHeader('X-CSRFToken',csr);
+          xhttp.send("Username="+Username+"&Password="+password);
+        }
+
+
+      }
+
+      function refresh()
+      {
+        document.getElementById("error").innerHTML = "";
+      }
+
+
+    </script>
+
+    </head>
+
+
+
+  <body >
+    <div class="bg">
+    </div>
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color:rgba(100,100,100,0.5);">
+      <img class="navbar-brand" src="{% static 'image/logo.png'%}" style="height:auto; width:auto;max-height:50px;" alt="logo">
+      <a class="nav-link navbar-brand text-white font-weight-bold border-right">MY-SERVER</a>
+      <form class="form-inline ml-auto d-none d-md-block" onclick="refresh()" >
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text text" >Username:</span>
+          </div>
+          <input class="form-control" type="text" id ="Username22" placeholder="Username"  />
+          <div class="input-group-prepend ml-2">
+            <span class="input-group-text text" >Password:</span>
+          </div>
+          <input class="form-control" type="password" id ="Password22" placeholder="Password"  />
+          <input type="button" class="btn btn-success"   value="Login" onclick="login(2)" />
+        </div>
+      </form>
+    </nav>
+
+
+
+
+
+
+    <div class="container mt-5">
+
+      <div class="row pt-5 text-white text-center d-md-none ">
+        <div class="offset-md-3 col-md-6  col-xs-2 border border-white rounded" style="background-color:rgba(100,100,100,0.5)">
+          <div class="text-center font-weight-bold text-success" >
+          <span style="font-size:30px;">  SIGN IN </span>
+          </div>
+          <form class="form pb-2" onclick="refresh()">
+            <div class="form-group">
+              <label for="Username2" >Username:</span>
+              <input class="form-control" type="text" id ="Username21" placeholder="Username"  />
+            </div>
+            <br />
+            <div class="form-group">
+              <label for="Password2" >Password:</span>
+              <input class="form-control" type="password" id ="Password21" placeholder="Password"  />
+            </div>
+              <input type="button" class="btn btn-success"   value="Login" onclick="login(1)" />
+            </div>
+          </form>
+        </div>
+
+
+
+      <div class="row pt-5">
+
+        <div class="offset-md-3 col-md-6  col-xs-2 border border-white rounded pb-1" style="background-color:rgba(100,100,100,0.5);" >
+          <div class="text-center font-weight-bold text-primary" >
+          <span style="font-size:30px;">  REGISTRATION</span>
+          </div>
+          <form class="form-inline" onclick="refresh()">
+            <div class="form-group m-2" style="width:100%;">
+              <label for="Username" class="text-left font-weight-bold text-white">Username:</label>
+              <input type="text" class="form-control ml-auto" id="Username" style="width:60%;" />
+            </div>
+
+            <div class="form-group m-2" style="width:100%;">
+              <label for="password1" class="text-left font-weight-bold text-white">Password:</label>
+              <input type="password" class="form-control ml-auto" id="password1" style="width:60%;" />
+            </div>
+            <div class="form-group m-2" style="width:100%;">
+              <label for="password2" class="text-left font-weight-bold text-white">Confirm Password:</label>
+              <input type="password" class="form-control ml-auto" id="password2" style="width:60%;" />
+            </div>
+
+            <div class="form-group m-2" style="width:100%;">
+              <label for="Firstname" class="text-left font-weight-bold text-white">First name:</label>
+              <input type="text" class="form-control ml-auto" id="Firstname" style="width:60%;" />
+            </div>
+
+            <div class="form-group m-2" style="width:100%;">
+              <label for="Lastname" class="text-left font-weight-bold text-white">Last name:</label>
+              <input type="text" class="form-control ml-auto" id="Lastname" style="width:60%;" />
+            </div>
+
+            <div class="form-group m-2" style="width:100%;">
+              <label for="Email" class="text-left font-weight-bold text-white">Email:</label>
+              <input type="Email" class="form-control ml-auto" id="Email" style="width:60%;" />
+            </div>
+
+          </form>
+          <div class="text-center">
+              <button  class="btn btn-primary" onclick="register()">Create New Account</button>
+          </div>
+          <span class="text-danger" id="error"></span>
+        </div>
+    </div>
+    </div>
+
+
+
+  </body>
+</html>

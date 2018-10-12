@@ -55,32 +55,6 @@
         xhttp.send("x="+x);
       }
     }
-
-
-
-      function Search()
-      {
-        txt = document.getElementById('search').value;
-        if(txt)
-        {
-          var xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function()
-          {
-            if(this.readyState==4 && this.status==200)
-            {
-              var y = xhttp.responseText;
-              document.write(y);
-            }
-          };
-          xhttp.open('POST','server/search/',true);
-          var csr = "{{ csrf_token }}";
-          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          xhttp.setRequestHeader('X-CSRFToken',csr);
-          xhttp.send("x="+txt);
-
-        }
-
-      }
     </script>
 
     </head>
@@ -100,21 +74,24 @@
     <nav class="navbar navbar-expand-md fixed-top navbar-dark" style="background-color:rgba(100,100,100,0.5);">
       <img class="navbar-brand" src="{% static 'image/logo.png'%}" style="height:auto; width:auto;max-height:50px;" alt="logo">
       <a class="nav-link navbar-brand text-white font-weight-bold border-right">MY-SERVER</a>
+      <span class=" text-{% if request.user.is_superuser %}primary{% else %}white{% endif %} font-weight-bold">{{ user }}</span>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbartarget"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbartarget">
         <ul class="navbar-nav mx-auto m-2">
           <li class="nav-item mr-md-3 "><a class="nav-link text-light" href="/">HOME</a></li>
           <li class="nav-item ml-md-3 "><a class="nav-link text-light" href="/server/upload">UPLOAD</a></li>
         </ul>
-        <form class="form-inline">
+        <form class="form-inline" action="/server/search/" method="post">
+          {% csrf_token %}
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text text">File:</span>
             </div>
-            <input class="form-control" type="text" id ="search" placeholder="Search" />
-            <input type="button" class="btn btn-success"{% if Searched == True %} disabled = true {% endif %} onclick="Search()"  value="Search"  />
+            <input class="form-control" type="text" name ="search" placeholder="Search" />
+            <input type="submit" class="btn btn-success" value="Search"  />
           </div>
         </form>
+        <a class="btn btn-secondary text-white m-2" href="/logout/"><small>LOG OUT</small></a>
       </div>
     </nav>
 
@@ -126,7 +103,7 @@
     <div class="container mt-5">
       <div class="row pt-5">
 
-        <div class="offset-md-3 col-md-6  col-xs-2" >
+        <div class="offset-md-3 col-md-6  col-xs-2 pt-xs-3" >
           <span class="text-info font-weight-bold ">{{ search }}</span>
           {% for i in data %}
           <div class="border-dark  p-3 text-white" style="margin:10px; border-radius:10px;background-color:rgba(50,50,50,0.5);">
@@ -143,7 +120,7 @@
             </table>
 
               <a class="btn btn-info" href="{{ i.File.url }}" download>Download</a>
-              <button class="btn btn-danger float-right" onClick ="Delete(x={{ i.pk }})" >Delete</button>
+            {% if i.Author == user or request.user.is_superuser %}  <button class="btn btn-danger float-right" onClick ="Delete(x={{ i.pk }})" >Delete</button>{% endif %}
 
 
 

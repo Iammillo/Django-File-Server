@@ -7,4 +7,6 @@ urlpatterns = [
                 path('upload/',views.upload),
                 path('delete/',views.delete),
                 path('search/',views.search),
+                path('register/',views.register),
+                path('validate/',views.validate),
                 ]

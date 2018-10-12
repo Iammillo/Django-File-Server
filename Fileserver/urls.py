@@ -17,12 +17,15 @@ from django.contrib import admin
 from django.urls import path,include
 from . import settings
 from django.conf.urls.static import static
-from .server import urls
+from django.views.generic import TemplateView
+from .server import urls,views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include(urls)),
     path('server/',include(urls)),
+    path('login/',TemplateView.as_view(template_name='login.html')),
+    path('logout/',views.Log_out),
 ]
 
 if settings.DEBUG:
